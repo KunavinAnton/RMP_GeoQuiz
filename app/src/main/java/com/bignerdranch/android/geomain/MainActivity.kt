@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +17,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prevButton: Button
     private lateinit var questionTextView: TextView
 
+    private  var countCorrect:Int = 0
+    private var countAnswers: Int = 0
+    private var currentIndex = 0
+
     private  val questionBank = listOf(
         Question(R.string.question_australia, true),
         Question(R.string.question_oceans, true),
@@ -24,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_americas, true),
         Question(R.string.question_asia, true)
     )
-    private var currentIndex = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,10 @@ class MainActivity : AppCompatActivity() {
         falseButton.setOnClickListener {
             checkAnswer(false)
         }
+        questionTextView.setOnClickListener {
+            currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
         nextButton.setOnClickListener{
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
@@ -58,6 +67,8 @@ class MainActivity : AppCompatActivity() {
         updateQuestion()
     }
     private fun updateQuestion(){
+        trueButton.isEnabled = true
+        falseButton.isEnabled = true
         val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
     }
@@ -65,12 +76,32 @@ class MainActivity : AppCompatActivity() {
         val correctAnswer = questionBank[currentIndex].answer
         val messageResId = if(userAnswer == correctAnswer){
             R.string.correct_toast
-        } else{
+        }
+        else{
             R.string.incorrect_toast
         }
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-    }
 
+
+        countAnswers += 1
+        if(messageResId == R.string.correct_toast) countCorrect += 1
+        if(countAnswers == questionBank.size) {
+            showResult(countCorrect, countAnswers)
+        }
+    }
+    private fun showResult(countCorrect:Int, countAnswers:Int){
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
+        nextButton.isEnabled = false
+        prevButton.isEnabled = false
+        questionTextView.isEnabled = false
+
+        Thread.sleep(3000)
+        val result = "Your score: ${(countCorrect * 100) / countAnswers}%"
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onStart() {
         super.onStart()
