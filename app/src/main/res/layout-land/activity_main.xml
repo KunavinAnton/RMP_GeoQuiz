@@ -25,8 +25,7 @@
             android:layout_height="wrap_content"
             android:text="@string/true_button"
             android:layout_marginEnd="18dp"
-            style="?android:attr/button"
-            />
+            style="?android:attr/button" />
         <Button
             android:id="@+id/false_button"
             android:layout_width="wrap_content"
