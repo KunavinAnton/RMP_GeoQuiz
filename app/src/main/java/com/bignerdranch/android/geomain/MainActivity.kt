@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity() {
         trueButton.isEnabled = false
         falseButton.isEnabled = false
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-        Log.i(TAG, "onStart called 2222222222222222")
 
         countAnswers += 1
         if(messageResId == R.string.correct_toast) countCorrect += 1
@@ -100,6 +99,24 @@ class MainActivity : AppCompatActivity() {
 
         val result = "Your score: ${(countCorrect * 100) / countAnswers}%"
         Thread.sleep(3000)
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+
+
+        countAnswers += 1
+        if(messageResId == R.string.correct_toast) countCorrect += 1
+        if(countAnswers == questionBank.size) {
+            showResult(countCorrect, countAnswers)
+        }
+    }
+    private fun showResult(countCorrect:Int, countAnswers:Int){
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
+        nextButton.isEnabled = false
+        prevButton.isEnabled = false
+        questionTextView.isEnabled = false
+
+        Thread.sleep(3000)
+        val result = "Your score: ${(countCorrect * 100) / countAnswers}%"
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
